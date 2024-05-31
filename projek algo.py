@@ -120,7 +120,7 @@ silahkan pilih menu :
 def input_data():
     os.system('cls' if os.name == 'nt' else 'clear')
     nama = input("Masukkan nama pelanggan: ")
-    no_hp = input("Masukkan nomor handphone pelanggan: ")
+    no_hp = int(input("Masukkan nomor handphone pelanggan: "))
     tanggal_masuk = datetime.date.today()
 
     data = pd.read_csv('jasa.csv')
@@ -154,8 +154,22 @@ def input_data():
                 ["Total Harga", int(total_harga)],
                 ["Status", "belum selesai"]  # Added default status
             ]
+            print("Data berhasil ditambahkan!")
+            sleep(1)
 
+            os.system('cls')
+            print(" ================= NOTA ================= ")
             print(tabulate.tabulate(summary, headers=["Keterangan", "Detail"], tablefmt="grid"))
+            while True :
+                tanya = input("Apakah anda ingin kembali ke menu?(ya/tidak) : ").lower()
+                if tanya == 'ya' :
+                    menu()
+                elif tanya == 'tidak' :
+                    break
+                else :
+                    print("berikan jawaban yang benar!")
+                    continue
+
             data_to_append = pd.DataFrame({
                 'Nama Pelanggan': [nama],
                 'Nomor HP': [no_hp],
