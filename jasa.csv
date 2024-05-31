@@ -1,0 +1,10 @@
+id,jenis,lama pengerjaan(hari),harga(kg)
+1,cuci basah reguler,3,3000
+2,cuci basah kilat,2,5000
+3,cuci basah express,1,7000
+4,cuci kering reguler,3,4000
+5,cuci kering kilat,2,6000
+6,cuci kering express,1,8000
+7,cuci setrika reguler,3,5000
+8,cuci setrika kilat,2,7000
+9,cuci setrika express,1,9000
