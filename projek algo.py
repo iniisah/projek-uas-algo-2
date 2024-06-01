@@ -5,6 +5,7 @@ import csv
 from time import sleep
 import pandas as pd
 
+
 def fungsi_awal():
     print('='*100)
     print("||                     //                SELAMAT DATANG                    \\\\                       ||")
@@ -25,6 +26,7 @@ def fungsi_awal():
             print('\n>>> Masukkan jawaban yang benar! <<<\n')
             continue
 
+#fungsi login dan register
 def sign_in():
     os.system('cls' if os.name == 'nt' else 'clear')
     df = pd.read_csv('admin.csv')
@@ -116,7 +118,7 @@ silahkan pilih menu :
             print(f' >>> {pilihan} tidak ada di pilihan <<< ')
             continue
 
-
+#fungsi input data
 def input_data():
     os.system('cls' if os.name == 'nt' else 'clear')
     nama = input("Masukkan nama pelanggan: ")
@@ -125,7 +127,7 @@ def input_data():
 
     data = pd.read_csv('jasa.csv')
 
-    print(tabulate.tabulate(data, headers=["id","jenis","lama pengerjaan(hari)","harga(kg)"], tablefmt="grid", showindex=False))
+    print(tabulate.tabulate(data, headers=["id", "jenis", "lama pengerjaan", "harga"], tablefmt="grid", showindex=False))
 
     while True:
         id_selected = input("Masukkan ID Layanan (1-9): ")
@@ -136,8 +138,8 @@ def input_data():
             selected_service = data[data['id'] == int(id_selected)]
             berat = float(input("Masukkan Berat / kg: "))
 
-            harga_per_kg = selected_service['harga(kg)'].values[0]
-            lama_pengerjaan = int(selected_service['lama pengerjaan(hari)'].values[0])  # Convert to integer
+            harga_per_kg = selected_service['harga'].values[0]
+            lama_pengerjaan = int(selected_service['lama pengerjaan'].values[0])
             total_harga = berat * harga_per_kg
             jenis_layanan = selected_service['jenis'].values[0]
 
@@ -152,23 +154,8 @@ def input_data():
                 ["Berat (kg)", berat],
                 ["Harga per kg", harga_per_kg],
                 ["Total Harga", int(total_harga)],
-                ["Status", "belum selesai"]  # Added default status
+                ["Status", "belum selesai"]
             ]
-            print("Data berhasil ditambahkan!")
-            sleep(1)
-
-            os.system('cls')
-            print(" ================= NOTA ================= ")
-            print(tabulate.tabulate(summary, headers=["Keterangan", "Detail"], tablefmt="grid"))
-            while True :
-                tanya = input("Apakah anda ingin kembali ke menu?(ya/tidak) : ").lower()
-                if tanya == 'ya' :
-                    menu()
-                elif tanya == 'tidak' :
-                    break
-                else :
-                    print("berikan jawaban yang benar!")
-                    continue
 
             data_to_append = pd.DataFrame({
                 'Nama Pelanggan': [nama],
@@ -179,12 +166,30 @@ def input_data():
                 'Berat (kg)': [berat],
                 'Harga per kg': [harga_per_kg],
                 'Total Harga': [total_harga],
-                'Status': ['belum selesai'] 
+                'Status': ['belum selesai']
             })
-            data_to_append.to_csv('nota.csv', mode='a', header=not os.path.exists('nota.csv'), index=False)
+
+            with open('nota.csv', mode='a', newline='') as file:
+                data_to_append.to_csv(file, header=not os.path.exists('nota.csv'), index=False)
+
+            print("Data berhasil ditambahkan!")
+            sleep(1)
+
+            print(" ================= NOTA ================= ")
+            print(tabulate.tabulate(summary, headers=["Keterangan", "Detail"], tablefmt="grid"))
+            while True:
+                tanya = input("Apakah anda ingin kembali ke menu?(ya/tidak) : ").lower()
+                if tanya == 'ya':
+                    menu()
+                    break
+                elif tanya == 'tidak':
+                    break
+                else:
+                    print("berikan jawaban yang benar!")
+                    continue
             break
 
-#                                    
+#fungsi cari data(bukan fitur)                                  
 def cari_data():
     def merge_sort(df, col):
         if len(df) > 1:
@@ -216,40 +221,53 @@ def cari_data():
                 j += 1
                 k += 1
 
-    os.system('cls' if os.name == 'nt' else 'clear')
-    print('-------------------- CARI DATA --------------------\n')
+    while True:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print('-------------------- CARI DATA --------------------\n')
 
-    try:
-        df = pd.read_csv('nota.csv', dtype={'NomorHP': int}) 
-    except FileNotFoundError:
-        print("File nota.csv tidak ditemukan.")
-        return
+        try:
+            df = pd.read_csv('nota.csv', dtype={'NomorHP': int}) 
+        except FileNotFoundError:
+            print("File nota.csv tidak ditemukan.")
+            return
 
-    merge_sort(df, 'NomorHP')
+        merge_sort(df, 'NomorHP')
 
-    nomor_hp = int(input("Masukkan nomor handphone pelanggan: ").strip()) 
+        nomor_hp = int(input("Masukkan nomor handphone pelanggan: ").strip()) 
 
-    left = 0
-    right = len(df) - 1
-    found = False
-    while left <= right:
-        mid = (left + right) // 2
-        if df.loc[mid, 'NomorHP'] == nomor_hp:
-            found = True
-            break
-        elif df.loc[mid, 'NomorHP'] < nomor_hp:
-            left = mid + 1
+        left = 0
+        right = len(df) - 1
+        found = False
+        while left <= right:
+            mid = (left + right) // 2
+            if df.loc[mid, 'NomorHP'] == nomor_hp:
+                found = True
+                break
+            elif df.loc[mid, 'NomorHP'] < nomor_hp:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+        if found:
+            print("\nData ditemukan:")
+            print(tabulate.tabulate(df.loc[[mid]], headers='keys', tablefmt='grid'))
         else:
-            right = mid - 1
+            print("\nData tidak ditemukan untuk nomor handphone tersebut.")
 
-    if found:
-        print("\nData ditemukan:")
-        print(tabulate.tabulate(df.loc[[mid]], headers='keys', tablefmt='grid'))
-    else:
-        print("\nData tidak ditemukan untuk nomor handphone tersebut.")
+        while True:
+            tanya = input("Apakah anda ingin mencari data lagi? (ya/tidak): ").strip().lower()
+            if tanya == 'ya':
+                cari_data()
+                break  
+            elif tanya == 'tidak':
+                menu()  
+                break
+            else:
+                print("Jawaban tidak valid. Silakan coba lagi.")
+                continue
 
 
-#fungsi edit data
+#fungsi edit data(ubah status, tambah data, edit data)
 def edit_data():
     def merge_sort(df, col):
         if len(df) > 1:
@@ -281,6 +299,7 @@ def edit_data():
                 j += 1
                 k += 1
 
+    #sub menu --> tambah data
     def tambah_data_jasa(df):
         print('\n----- TAMBAH DATA JASA -----\n')
         id_jasa = input("Masukkan ID Jasa: ").strip()
@@ -293,32 +312,47 @@ def edit_data():
         df.to_csv('jasa.csv', index=False)
         print("Data jasa berhasil ditambahkan.")
 
+    #sub menu --> edit data
     def edit_data_jasa(df):
         print('\n----- EDIT DATA JASA -----\n')
-        id_jasa = input("Masukkan ID Jasa yang ingin diedit: ").strip()
+        print(tabulate.tabulate(df, headers='keys', tablefmt='grid', showindex=False)) 
+        while True:
+            id_jasa = input("Masukkan ID Jasa yang ingin diedit: ").strip()
 
-        if id_jasa in df['id'].values:
-            kolom = input("Masukkan nama kolom yang ingin diubah (jenis/lama_pengerjaan/harga): ").strip().lower()
+            if id_jasa in df['id'].astype(str).values: 
+                kolom = input("Masukkan nama kolom yang ingin diubah (jenis/lama pengerjaan/harga): ").strip().lower()
 
-            if kolom in df.columns:
-                new_value = input(f"Masukkan nilai baru untuk kolom '{kolom}': ").strip()
-                df.loc[df['id'] == id_jasa, kolom] = new_value
-                df.to_csv('jasa.csv', index=False)
-                print("Data jasa berhasil diubah.")
+                if kolom in df.columns:
+                    new_value = int(input(f"Masukkan nilai baru untuk kolom '{kolom}': "))
+                    df.loc[df['id'].astype(str) == id_jasa, kolom] = new_value  
+                    df.to_csv('jasa.csv', index=False)
+                    print("Data jasa berhasil diubah.")
+                    while True:
+                        tanya = input("Apakah anda ingin kembali ke menu? (ya/tidak): ").strip().lower()
+                        if tanya == 'ya':
+                            edit_data()
+                            return
+                        elif tanya == 'tidak':
+                            return
+                        else:
+                            print("Jawaban tidak valid. Silakan coba lagi.")
+                else:
+                    print("Kolom tidak valid.")
             else:
-                print("Kolom tidak valid.")
-        else:
-            print("ID Jasa tidak ditemukan.")
+                print("ID Jasa tidak ditemukan.")
+
 
     os.system('cls' if os.name == 'nt' else 'clear')
     print('-------------------- MENU --------------------\n')
     print('1. Ubah Status Pesanan')
     print('2. Edit Data Jasa')
-    print('3. Tambah Data Jasa\n')
+    print('3. Tambah Data Jasa')
+    print('4. Kembali')
 
     choice = input("Masukkan pilihan menu: ").strip()
 
     if choice == '1':
+        #sub menu --> ubah status
         print('\n-------------------- UBAH STATUS PESANAN --------------------\n')
         try:
             df = pd.read_csv('nota.csv', dtype={'NomorHP': int}) 
@@ -343,7 +377,7 @@ def edit_data():
                 right = mid - 1
 
         if found:
-            if df.loc[mid, 'status'] == 'belum':
+            if df.loc[mid, 'status'] == 'belum selesai':
                 confirm = input("Apakah Anda ingin mengubah status pesanan menjadi selesai? (ya/tidak): ").strip().lower()
                 if confirm == 'ya':
                     new_status = 'selesai'
@@ -356,8 +390,19 @@ def edit_data():
                 print("Status pesanan telah selesai sebelumnya.")
         else:
             print("\nData tidak ditemukan untuk nomor handphone tersebut.")
+
+        while True:
+            tanya = input("Apakah anda ingin kembali ke menu? (ya/tidak): ").strip().lower()
+            if tanya == 'ya':
+                edit_data()
+                break  
+            elif tanya == 'tidak':
+                menu()  
+                return
+            else:
+                print("Jawaban tidak valid. Silakan coba lagi.") 
+
     elif choice == '2':
-        print('\n-------------------- EDIT DATA JASA --------------------\n')
         try:
             df_jasa = pd.read_csv('jasa.csv')
         except FileNotFoundError:
@@ -368,7 +413,6 @@ def edit_data():
         print(df_jasa)
         edit_data_jasa(df_jasa)
     elif choice == '3':
-        print('\n-------------------- TAMBAH DATA JASA --------------------\n')
         try:
             df_jasa = pd.read_csv('jasa.csv')
         except FileNotFoundError:
@@ -376,11 +420,23 @@ def edit_data():
             return
 
         tambah_data_jasa(df_jasa)
+
+    elif choice == '4' :
+        menu()
+
     else:
         print("Pilihan tidak valid.")
 
-
-
+#fungsi keluar --> fitur untuk keluar
+def keluar() :
+    tanya = input('Apakah anda yakin ingin keluar dari program? (ya/tidak) : ').lower()
+    while True :
+        if tanya == 'ya' :
+            break
+        elif tanya == 'tidak' :
+            menu()
+            break
+    
 
 
 
@@ -413,14 +469,6 @@ fungsi_awal()
 #            print(f"Nomor HP {no_hp} tidak ditemukan dalam database.")
 #    menu() 
 #
-#def keluar() :
-#    tanya = input('Apakah anda yakin ingin keluar dari program? (ya/tidak) : ').lower()
-#    while True :
-#        if tanya == 'ya' :
-#            break
-#        elif tanya == 'tidak' :
-#            menu()
-#            break
 
 
 

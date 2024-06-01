@@ -1,6 +1,7 @@
-nama_pelanggan,NomorHP,tanggal_masuk,tanggal_diambil,jenis,berat/(kg),harga/(kg),total,status
-laely dwi,81331,2024-06-01,2024-06-02,cuci basah express,4.0,7000,28000.0,selesai
-aisyah,812345,2024-06-01,2024-06-04,cuci basah reguler,8.9,3000,26700.0,selesai
-chika,08999,2024-06-01,2024-06-03,cuci basah kilat,1.0,5000,5000.0,belum selesai
-devi,087867564534,2024-06-01,2024-06-04,cuci kering reguler,3.6,4000,14400.0,belum selesai
-cika,081232342312,2024-06-01,2024-06-03,cuci kering kilat,2.1,6000,12600.0,belum selesai
+nama_pelanggan,NomorHP,tanggal_masuk,tanggal_diambil,jenis,berat(kg),harga(kg),total,status
+chika,-397198412,2024-06-01,2024-06-04,cuci kering reguler,6.8,4000,27200.0,belum selesai
+ios,899,2024-06-01,2024-06-04,cuci setrika reguler,3.0,5000,15000.0,selesai
+aisyah,812345678,2024-06-01,2024-06-03,cuci setrika kilat,4.2,7000,29400.0,selesai
+lely,819283645,2024-06-01,2024-06-04,cuci kering reguler,8.4,4000,33600.0,belum selesai
+devi,863341737,2024-06-01,2024-06-03,cuci setrika kilat,2.3,7000,16099.999999999998,belum selesai
+adim,873625181,2024-06-01,2024-06-04,cuci setrika reguler,2.1,5000,10500.0,belum selesai
